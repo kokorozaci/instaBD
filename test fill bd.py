@@ -11,10 +11,12 @@ from datetime import datetime, timedelta
 import pandas as pd
 import openpyxl
 import os
+from shlex import quote
 import re
 from os import path
 from instagram_web_api import Client, ClientCompatPatch, ClientError, ClientLoginError
 from pandas.io.json import json_normalize
+from save_to_mysql.save_from_hashtag_serch import ParseMedia
 
 
 class MyClient(Client):
@@ -30,44 +32,71 @@ web_api = MyClient(auto_patch=True, drop_incompat_keys=False)
 con = pymysql.connect('localhost', 'root',
                       'q3141592654', 'instabd')
 
-path = 'D:/PyProgects/bot/3_0/json'
+path = 'D:/PyProgects/bot/3_0/json_info/json'
 files = os.listdir(path)
 
-f_name = [i for i in files if i.endswith('.json')]
-print(len(f_name))
+f_name = [i for i in files if i.endswith('.json') and i.startswith('folowers')]
+# f_name2 = [i for i in files if i.endswith('.json') and (not (i.startswith('feed') or i.startswith('acc') or i.startswith('folowing') or i.startswith('folowers') or i.startswith('following')))]
+# print(len(f_name2))
+tag_list = ['linendress']
+hashtag = tag_list[0]
+end_cursor = None
+count = 50
 
-with con:
-    cur = con.cursor(pymysql.cursors.DictCursor)
-    for file in f_name[:30]:
-        with open(f'D:/PyProgects/bot/3_0/json/{file}', 'r') as json_line:
-            datastore = json.load(json_line)
-        biography = datastore['biography']
-        if "'" in biography:
-            biography = biography.split("'")
-            biography = " ".join(biography)
-        print(biography)
-        if ':' in biography:
-            biography = biography.split(":")
-            biography = ' '.join(biography)
-            print(biography)
-        cur.execute(f"INSERT IGNORE INTO users (id, username) VALUES ('{datastore['id']}', '{str(datastore['username'])}')")
-        cur.execute(f"INSERT IGNORE INTO profiles (user_id, biography, blocked_by_viewer, country_block, external_url,"
-                    f"followed_count, follow_count, full_name, is_business_account, business_category, is_private,"
-                    f"is_verified, profile_pic_url, profile_pic_url_hd, connected_fb_page) "
-                    f"VALUES ('{str(datastore['id'])}', '{biography}', {datastore['blocked_by_viewer']},"
-                    f"'{str(datastore['country_block'])}', '{str(datastore['external_url'])}', "
-                    f"'{str(datastore['edge_followed_by']['count'])}', '{str(datastore['edge_follow']['count'])}', "
-                    f"'{str(datastore['full_name'])}', {datastore['is_business_account']}"
-                    f",'{str(datastore['business_category_name'])}', {datastore['is_private']}, {datastore['is_verified']}"
-                    f",'{str(datastore['profile_pic_url'])}', '{str(datastore['profile_pic_url_hd'])}', '{str(datastore['connected_fb_page'])}')")
-
-# tag_list = ['linendress']
-# hashtag = tag_list[0]
-# end_cursor = None
-# count = 50
+# tag_all = web_api.tag_feed(hashtag, count=count, end_cursor=end_cursor)
+user = 1308428836
+pm = ParseMedia()
+pm.insert_user(user_id=user, user_name='zveroshmotka')
+for file in f_name:
+    print(file)
+    cont = False
+    with open(f'D:/PyProgects/bot/3_0/json_info/json/{file}', 'r') as json_line:
+        try:
+            edges1 = json.load(json_line)
+        except Exception as e:
+            print(e)
+            continue
+    pm.parse_followers(edges1, user, user_is_follower=0)
+    for follower in edges1:
+        i = 0
+        while True:
+            i += 1
+            try:
+                with open(f"D:/PyProgects/bot/3_0/json_info/json/following_{follower['id']}_{i}.json", 'r') as json_line:
+                    edges = json.load(json_line)
+            except Exception as e:
+                try:
+                    with open(f"D:/PyProgects/bot/3_0/json_info/json/folowing_{follower['id']}_{i}.json", 'r') as json_line:
+                        edges = json.load(json_line)
+                except Exception as e:
+                    print(e)
+                    cont = True
+                    break
+            if follower['id'] == user:
+                print('1')
+            pm.parse_followers(edges, follower['id'], user_is_follower=1)
+        if cont:
+            continue
+# for file in f_name2:
 #
-# tag_all = web_api.tag_feed(hashtag, count=count, end_cursor = end_cursor)
-# with open(f'D:/PyProgects/instaBD/test.json', "w", encoding="utf-8") as f:
-#     json.dump(tag_all, f)
-# y = pd.DataFrame.from_dict(json_normalize(tag_all), orient='columns')
-# print(y.columns)
+#     print(file)
+#     with open(f'D:/PyProgects/bot/3_0/json_info/json/{file}', 'r') as json_line:
+#         try:
+#             tag_all = json.load(json_line)
+#         except Exception as e:
+#             print(e)
+#     try:
+#         pm.parse_ht_info(tag_all)  # сохраняем информацию о хештеге
+#         pm.parse_edges(tag_all["data"]["hashtag"]["edge_hashtag_to_media"]["edges"])  # сохраняем информациюо постах, эта часть используется в цикле
+#     except Exception as e:
+#         print (e)
+# print(pm.error_medias)
+#
+# for file in f_name:
+#     with open(f'D:/PyProgects/bot/3_0/json/{file}', 'r') as json_line:
+#         try:
+#             datastore = json.load(json_line)
+#         except Exception as e:
+#             print(e)
+#     pm.parse_profiles(datastore)
+#     pm.parse_edges(datastore.get('edge_owner_to_timeline_media', {}).get('edges', []))
