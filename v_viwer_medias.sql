@@ -1,4 +1,4 @@
--- представление, выбирающее посты пользователей, для того чтобы время было в нужном формате + есть имя автора поста
+-- РїСЂРµРґСЃС‚Р°РІР»РµРЅРёРµ, РІС‹Р±РёСЂР°СЋС‰РµРµ РїРѕСЃС‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»РµР№, РґР»СЏ С‚РѕРіРѕ С‡С‚РѕР±С‹ РІСЂРµРјСЏ Р±С‹Р»Рѕ РІ РЅСѓР¶РЅРѕРј С„РѕСЂРјР°С‚Рµ + РµСЃС‚СЊ РёРјСЏ Р°РІС‚РѕСЂР° РїРѕСЃС‚Р°
 
 CREATE or replace VIEW v_view_media
 AS 
@@ -11,20 +11,20 @@ AS
 
 explain select shortcode, count_comments
 from medias
-where count_comments > 2 and body not rlike 'розыгрыш|конкурс|победитель|помогите|разыгрываем|подпишитесь|дарим' 
+where count_comments > 2 and body not rlike 'СЂРѕР·С‹РіСЂС‹С€|РєРѕРЅРєСѓСЂСЃ|РїРѕР±РµРґРёС‚РµР»СЊ|РїРѕРјРѕРіРёС‚Рµ|СЂР°Р·С‹РіСЂС‹РІР°РµРј|РїРѕРґРїРёС€РёС‚РµСЃСЊ|РґР°СЂРёРј' 
 order by created_at_timestamp desc
 limit 10;
 
 select *
 from v_view_media
-where comments > 1 and body not rlike 'розыгрыш|конкурс|победитель|помогите|разыгрываем|подпишитесь|дарим'
+where comments > 1 and body not rlike 'СЂРѕР·С‹РіСЂС‹С€|РєРѕРЅРєСѓСЂСЃ|РїРѕР±РµРґРёС‚РµР»СЊ|РїРѕРјРѕРіРёС‚Рµ|СЂР°Р·С‹РіСЂС‹РІР°РµРј|РїРѕРґРїРёС€РёС‚РµСЃСЊ|РґР°СЂРёРј'
 limit 5;
 
 select *
 from medias md
 join comments cmm
 on md.id = cmm.media_id
-where cmm.body like '%куп%'
+where cmm.body like '%РєСѓРї%'
 order by md.id ;
 
 select count(*)

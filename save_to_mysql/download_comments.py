@@ -5,17 +5,9 @@ import pymysql
 import hashlib
 import string
 import random
-import json
 from time import sleep
-from datetime import datetime, timedelta
-import pandas as pd
-import openpyxl
-import os
-from shlex import quote
-import re
-from os import path
+from datetime import datetime
 from instagram_web_api import Client, ClientCompatPatch, ClientError, ClientLoginError
-from pandas.io.json import json_normalize
 from save_to_mysql.save_from_hashtag_serch import ParseMedia
 
 

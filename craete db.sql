@@ -135,9 +135,9 @@ CREATE TABLE comments_hashtags(
 DROP TABLE IF EXISTS mentions;
 CREATE TABLE mentions(
 	user_id BIGINT UNSIGNED NOT NULL,
-	media_id BIGINT UNSIGNED NOT NULL,  -- при заполнении надо продумать как заполнять это поле если упоминание в комментарии или в медиа
+	media_id BIGINT UNSIGNED NOT NULL,  -- РїСЂРё Р·Р°РїРѕР»РЅРµРЅРёРё РЅР°РґРѕ РїСЂРѕРґСѓРјР°С‚СЊ РєР°Рє Р·Р°РїРѕР»РЅСЏС‚СЊ СЌС‚Рѕ РїРѕР»Рµ РµСЃР»Рё СѓРїРѕРјРёРЅР°РЅРёРµ РІ РєРѕРјРјРµРЅС‚Р°СЂРёРё РёР»Рё РІ РјРµРґРёР°
 	owner_metion_id BIGINT UNSIGNED NOT null,
-	PRIMARY KEY (user_id, media_id, owner_metion_id), -- может быть несколько упоминаний под медиа от разных юзеров
+	PRIMARY KEY (user_id, media_id, owner_metion_id), -- РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµСЃРєРѕР»СЊРєРѕ СѓРїРѕРјРёРЅР°РЅРёР№ РїРѕРґ РјРµРґРёР° РѕС‚ СЂР°Р·РЅС‹С… СЋР·РµСЂРѕРІ
     FOREIGN KEY (user_id) REFERENCES users(id),
     FOREIGN KEY (media_id) REFERENCES medias(id),
     FOREIGN KEY (owner_metion_id) REFERENCES users(id)
@@ -164,9 +164,9 @@ CREATE TABLE likes_comment(
 
 DROP TABLE IF EXISTS follows;
 CREATE TABLE follows(
-	follower_id BIGINT UNSIGNED NOT NULL, -- подписчик
-	follows_id BIGINT UNSIGNED NOT NULL, -- тот на кого подписан
-	PRIMARY KEY (follower_id, follows_id), -- чтобы не было 2 записей о пользователе и сообществе
+	follower_id BIGINT UNSIGNED NOT NULL, -- РїРѕРґРїРёСЃС‡РёРє
+	follows_id BIGINT UNSIGNED NOT NULL, -- С‚РѕС‚ РЅР° РєРѕРіРѕ РїРѕРґРїРёСЃР°РЅ
+	PRIMARY KEY (follower_id, follows_id), -- С‡С‚РѕР±С‹ РЅРµ Р±С‹Р»Рѕ 2 Р·Р°РїРёСЃРµР№ Рѕ РїРѕР»СЊР·РѕРІР°С‚РµР»Рµ Рё СЃРѕРѕР±С‰РµСЃС‚РІРµ
     FOREIGN KEY (follower_id) REFERENCES users(id),
     FOREIGN KEY (follows_id) REFERENCES users(id)
 );

@@ -1,12 +1,12 @@
 /*
-Частота конкурсов в месяц  - насколько аккаунт активно работает с подписчиками и привлекает новую аудиторию
+Р§Р°СЃС‚РѕС‚Р° РєРѕРЅРєСѓСЂСЃРѕРІ РІ РјРµСЃСЏС†  - РЅР°СЃРєРѕР»СЊРєРѕ Р°РєРєР°СѓРЅС‚ Р°РєС‚РёРІРЅРѕ СЂР°Р±РѕС‚Р°РµС‚ СЃ РїРѕРґРїРёСЃС‡РёРєР°РјРё Рё РїСЂРёРІР»РµРєР°РµС‚ РЅРѕРІСѓСЋ Р°СѓРґРёС‚РѕСЂРёСЋ
 */
 
 USE instabd;
 
 DROP FUNCTION IF EXISTS f_giveaway_frequency_per_month;
 
-DELIMITER $$ -- выставим разделитель
+DELIMITER $$ -- РІС‹СЃС‚Р°РІРёРј СЂР°Р·РґРµР»РёС‚РµР»СЊ
 CREATE FUNCTION f_giveaway_frequency_per_month(check_user_id BIGINT)
 RETURNS FLOAT READS SQL DATA
   BEGIN
@@ -20,7 +20,7 @@ RETURNS FLOAT READS SQL DATA
    		(select count(*)
    		from (select shortcode
 		from medias
-		where owner_id = check_user_id and body rlike 'розыгрыш|конкурс|победитель|помогите|разыгрываем|подпишитесь|дарим') m_giw);
+		where owner_id = check_user_id and body rlike 'СЂРѕР·С‹РіСЂС‹С€|РєРѕРЅРєСѓСЂСЃ|РїРѕР±РµРґРёС‚РµР»СЊ|РїРѕРјРѕРіРёС‚Рµ|СЂР°Р·С‹РіСЂС‹РІР°РµРј|РїРѕРґРїРёС€РёС‚РµСЃСЊ|РґР°СЂРёРј') m_giw);
 
    		
    set first_post_date = 
@@ -44,14 +44,14 @@ RETURNS FLOAT READS SQL DATA
 DELIMITER ; 
 
 
--- проверка
+-- РїСЂРѕРІРµСЂРєР°
 
 -- set @u_id = (select id from users where name = 'vaganni_77');
-select f_giveaway_frequency_per_month(1308428836);  -- конкурсов в месяц
+select f_giveaway_frequency_per_month(1308428836);  -- РєРѕРЅРєСѓСЂСЃРѕРІ РІ РјРµСЃСЏС†
 
 
--- пользователи с конкурсами
+-- РїРѕР»СЊР·РѕРІР°С‚РµР»Рё СЃ РєРѕРЅРєСѓСЂСЃР°РјРё
 select owner_id, count(*) 
 from medias
-where body rlike 'розыгрыш|конкурс|победитель|помогите|разыгрываем|подпишитесь|дарим'
+where body rlike 'СЂРѕР·С‹РіСЂС‹С€|РєРѕРЅРєСѓСЂСЃ|РїРѕР±РµРґРёС‚РµР»СЊ|РїРѕРјРѕРіРёС‚Рµ|СЂР°Р·С‹РіСЂС‹РІР°РµРј|РїРѕРґРїРёС€РёС‚РµСЃСЊ|РґР°СЂРёРј'
 group by owner_id;

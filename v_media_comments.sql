@@ -1,5 +1,5 @@
 /*
- * создание представления с комментариями к постам
+ * СЃРѕР·РґР°РЅРёРµ РїСЂРµРґСЃС‚Р°РІР»РµРЅРёСЏ СЃ РєРѕРјРјРµРЅС‚Р°СЂРёСЏРјРё Рє РїРѕСЃС‚Р°Рј
  */
 CREATE or replace VIEW v_media_comments
 AS
@@ -17,20 +17,20 @@ join comments c
 
 -- ----------------------------
 
-select shortcode , media_text,  count(*) count_comm -- подсчёт комментариев к посту, считаются только комментарии с ключевым словом 
+select shortcode , media_text,  count(*) count_comm -- РїРѕРґСЃС‡С‘С‚ РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ Рє РїРѕСЃС‚Сѓ, СЃС‡РёС‚Р°СЋС‚СЃСЏ С‚РѕР»СЊРєРѕ РєРѕРјРјРµРЅС‚Р°СЂРёРё СЃ РєР»СЋС‡РµРІС‹Рј СЃР»РѕРІРѕРј 
 from v_media_comments
-where (comment_text like '%куп%' or comment_text like '%цен%') and comment_owner <> media_owner 
+where (comment_text like '%РєСѓРї%' or comment_text like '%С†РµРЅ%') and comment_owner <> media_owner 
 group by shortcode
 having count_comm > 5
 order by count_comm desc
 limit 20;
 
 
--- выбор постов по хештегу который есть или в тексте сообщения или в тексте комментария
+-- РІС‹Р±РѕСЂ РїРѕСЃС‚РѕРІ РїРѕ С…РµС€С‚РµРіСѓ РєРѕС‚РѕСЂС‹Р№ РµСЃС‚СЊ РёР»Рё РІ С‚РµРєСЃС‚Рµ СЃРѕРѕР±С‰РµРЅРёСЏ РёР»Рё РІ С‚РµРєСЃС‚Рµ РєРѕРјРјРµРЅС‚Р°СЂРёСЏ
 call bp_view_media('dress', 0, @media_count);
 select @media_count;
 
--- выбираем все комментарии к посту не от автора поста
+-- РІС‹Р±РёСЂР°РµРј РІСЃРµ РєРѕРјРјРµРЅС‚Р°СЂРёРё Рє РїРѕСЃС‚Сѓ РЅРµ РѕС‚ Р°РІС‚РѕСЂР° РїРѕСЃС‚Р°
 select comment_time, comment_text --  media_time, count(*) c, shortcode
 from v_media_comments
 where shortcode = 'B2mbgbiBzdU' and media_owner <> comment_owner -- and comment_time > date('2019-09-20')-- group by shortcode

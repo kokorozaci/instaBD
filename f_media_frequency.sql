@@ -1,11 +1,11 @@
 /*
-Частота постов от времени, средняя,  post_per_week    - медийная активнось аккаунта
+Р§Р°СЃС‚РѕС‚Р° РїРѕСЃС‚РѕРІ РѕС‚ РІСЂРµРјРµРЅРё, СЃСЂРµРґРЅСЏСЏ,  post_per_week    - РјРµРґРёР№РЅР°СЏ Р°РєС‚РёРІРЅРѕСЃСЊ Р°РєРєР°СѓРЅС‚Р°
 */
 USE instabd;
 
 DROP FUNCTION IF EXISTS f_media_frequency;
 
-DELIMITER $$ -- выставим разделитель
+DELIMITER $$ -- РІС‹СЃС‚Р°РІРёРј СЂР°Р·РґРµР»РёС‚РµР»СЊ
 CREATE FUNCTION f_media_frequency(check_user_id BIGINT)
 RETURNS INT READS SQL DATA
   BEGIN
@@ -40,7 +40,7 @@ RETURNS INT READS SQL DATA
 DELIMITER ; 
 
 
--- проверка
+-- РїСЂРѕРІРµСЂРєР°
 
 set @u_id = (select id from users where name = 'vaganni_77');
 select f_media_frequency(@u_id);

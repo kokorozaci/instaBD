@@ -1,5 +1,5 @@
 /*
-Покупательская активность (вопросов о цене в среднем на 1 пост) по сути отражает проент целевых комментариев в средне в аккаунте
+РџРѕРєСѓРїР°С‚РµР»СЊСЃРєР°СЏ Р°РєС‚РёРІРЅРѕСЃС‚СЊ (РІРѕРїСЂРѕСЃРѕРІ Рѕ С†РµРЅРµ РІ СЃСЂРµРґРЅРµРј РЅР° 1 РїРѕСЃС‚) РїРѕ СЃСѓС‚Рё РѕС‚СЂР°Р¶Р°РµС‚ РїСЂРѕРµРЅС‚ С†РµР»РµРІС‹С… РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РІ СЃСЂРµРґРЅРµ РІ Р°РєРєР°СѓРЅС‚Рµ
 */
 
 USE instabd;
@@ -18,7 +18,7 @@ RETURNS FLOAT READS SQL DATA
 		from medias md
 		join comments cmm
 			on md.id = cmm.media_id
-		where (cmm.body like '%куп%' or cmm.body like '%цен%') and md.owner_id <> cmm.owner_id and md.owner_id = check_user_id);
+		where (cmm.body like '%РєСѓРї%' or cmm.body like '%С†РµРЅ%') and md.owner_id <> cmm.owner_id and md.owner_id = check_user_id);
 
    		/*
 	set count_posts = 
@@ -39,11 +39,11 @@ RETURNS FLOAT READS SQL DATA
 DELIMITER ; 
 
 
--- проверка
+-- РїСЂРѕРІРµСЂРєР°
 
 select f_giveaway_frequency_n(16008823); 
 
--- посты только с известными комментариями
+-- РїРѕСЃС‚С‹ С‚РѕР»СЊРєРѕ СЃ РёР·РІРµСЃС‚РЅС‹РјРё РєРѕРјРјРµРЅС‚Р°СЂРёСЏРјРё
 select count(*)
 from 
 (select md.shortcode 
@@ -53,7 +53,7 @@ from
 		where md.owner_id = 16008823
 	group by md.id) media_c;
 
--- количество комментарив под 'известными' постами
+-- РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРјРјРµРЅС‚Р°СЂРёРІ РїРѕРґ 'РёР·РІРµСЃС‚РЅС‹РјРё' РїРѕСЃС‚Р°РјРё
 select count(*)
 from medias md
 		right join comments cmm

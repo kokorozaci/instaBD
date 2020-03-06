@@ -4,10 +4,6 @@
 import pymysql
 import re
 from shlex import quote
-import hashlib
-import string
-import random
-from instagram_web_api import Client, ClientCompatPatch, ClientError, ClientLoginError
 
 NULL = 'NULL'
 

@@ -1,5 +1,5 @@
 /*
-ER Engagement Rate (ER per post = (лайки + комментарии) / подписчики * 100%)
+ER Engagement Rate (ER per post = (Р»Р°Р№РєРё + РєРѕРјРјРµРЅС‚Р°СЂРёРё) / РїРѕРґРїРёСЃС‡РёРєРё * 100%)
 */
 
 USE instabd;
@@ -12,42 +12,45 @@ RETURNS FLOAT READS SQL DATA
   BEGIN
     DECLARE count_likes_comments_per_post int;
     declare count_followers int;
+ 	declare giw_text text;
+   
+    set giw_text := 'СЂРѕР·С‹РіСЂС‹С€|РєРѕРЅРєСѓСЂСЃ|РїРѕР±РµРґРёС‚РµР»СЊ|РїРѕРјРѕРіРёС‚Рµ|СЂР°Р·С‹РіСЂС‹РІР°РµРј|РїРѕРґРїРёС€РёС‚РµСЃСЊ|РґР°СЂРёРј';
  
--- информация с погрешностью, не учтено что под постами могкут быть комментарии автора поста, т.к.  лайков намного больше, погрешность не существенная
+-- РёРЅС„РѕСЂРјР°С†РёСЏ СЃ РїРѕРіСЂРµС€РЅРѕСЃС‚СЊСЋ, РЅРµ СѓС‡С‚РµРЅРѕ С‡С‚Рѕ РїРѕРґ РїРѕСЃС‚Р°РјРё РјРѕРіРєСѓС‚ Р±С‹С‚СЊ РєРѕРјРјРµРЅС‚Р°СЂРёРё Р°РІС‚РѕСЂР° РїРѕСЃС‚Р°, С‚.Рє.  Р»Р°Р№РєРѕРІ РЅР°РјРЅРѕРіРѕ Р±РѕР»СЊС€Рµ, РїРѕРіСЂРµС€РЅРѕСЃС‚СЊ РЅРµ СЃСѓС‰РµСЃС‚РІРµРЅРЅР°СЏ
 	set count_likes_comments_per_post = 
    		round((select(((select sum(count_likes)
 		from medias
-		where owner_id = check_user_id)
+		where owner_id = check_user_id and body not rlike giw_text)
 		+
 		(select sum(count_comments)
 		from medias
- 		where owner_id = check_user_id))
+ 		where owner_id = check_user_id and body not rlike giw_text))
  		/(select count(*)
  		from medias
- 		where owner_id = check_user_id)) as comm_likes), 0);
+ 		where owner_id = check_user_id and body not rlike giw_text)) as comm_likes), 0);
    		
    	set count_followers = 
    		(select counts_followed_by 
    		 from users_profiles
    		 where user_id = check_user_id);
    
-    RETURN (count_likes_comments_per_post / count_followers) * 100; -- ) / count_followers * 100;
+    RETURN (count_likes_comments_per_post / count_followers) * 100;
   END$$ 
 DELIMITER ; 
 
 
--- проверка
+-- РїСЂРѕРІРµСЂРєР°
 
 select round(f_engagement_rate(20803728), 2) as ER;  -- ER
 
--- юзеры с данными о постах и аккаунтах
+-- СЋР·РµСЂС‹ СЃ РґР°РЅРЅС‹РјРё Рѕ РїРѕСЃС‚Р°С… Рё Р°РєРєР°СѓРЅС‚Р°С…
 select up.user_id 
 from users_profiles up 
 join medias m on up.user_id = m.owner_id
 where up.counts_followed_by is not null
 group by up.user_id;
 
--- среднее количество лайков и комментариев на пост
+-- СЃСЂРµРґРЅРµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ Р»Р°Р№РєРѕРІ Рё РєРѕРјРјРµРЅС‚Р°СЂРёРµРІ РЅР° РїРѕСЃС‚
 select(((select sum(count_likes)
 from medias
 where owner_id = 4105537)

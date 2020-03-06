@@ -1,6 +1,6 @@
 select name, count_media from hashtags where id = 144;
 
-select count(*)  'кол-во постов в базе'   -- количество постов в базе по хештегу
+select count(*)  'РєРѕР»-РІРѕ РїРѕСЃС‚РѕРІ РІ Р±Р°Р·Рµ'   -- РєРѕР»РёС‡РµСЃС‚РІРѕ РїРѕСЃС‚РѕРІ РІ Р±Р°Р·Рµ РїРѕ С…РµС€С‚РµРіСѓ
 from (select mh.media_id 
 from hashtags h 
 join medias_hashtags mh 
@@ -14,9 +14,9 @@ join medias m on c.media_id = m.id
 join hashtags h2 on h2.id = ch.hashtag_id 
 where h2.name like 'dress') all_med;
 
-EXPLAIN select count(*) from medias_hashtags; -- количество ссылок на посты по хештегам 5 385 101 записей
+EXPLAIN select count(*) from medias_hashtags; -- РєРѕР»РёС‡РµСЃС‚РІРѕ СЃСЃС‹Р»РѕРє РЅР° РїРѕСЃС‚С‹ РїРѕ С…РµС€С‚РµРіР°Рј 5 385 101 Р·Р°РїРёСЃРµР№
 
-explain select * from medias m join users u on m.owner_id = u.id where u.name = 'vaganni_77' order by m.count_comments desc; -- посты пользователя
+explain select * from medias m join users u on m.owner_id = u.id where u.name = 'vaganni_77' order by m.count_comments desc; -- РїРѕСЃС‚С‹ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 
 select  h.name, count(h.name) count_hashtag
 from medias_hashtags mh 
@@ -25,10 +25,10 @@ join users u on m.owner_id = u.id
 join hashtags h on mh.hashtag_id = h.id 
 where u.name = 'vaganni_77'
 group by h.name
-order by count_hashtag desc;  -- хештеги которые использовал пользователь в своих постах сортированные по частоте
+order by count_hashtag desc;  -- С…РµС€С‚РµРіРё РєРѕС‚РѕСЂС‹Рµ РёСЃРїРѕР»СЊР·РѕРІР°Р» РїРѕР»СЊР·РѕРІР°С‚РµР»СЊ РІ СЃРІРѕРёС… РїРѕСЃС‚Р°С… СЃРѕСЂС‚РёСЂРѕРІР°РЅРЅС‹Рµ РїРѕ С‡Р°СЃС‚РѕС‚Рµ
 
 set @u_id = (select id from users where name = 'vaganni_77');  
-select f_media_frequency(@u_id);  -- частота публикаций в неделю
+select f_media_frequency(@u_id);  -- С‡Р°СЃС‚РѕС‚Р° РїСѓР±Р»РёРєР°С†РёР№ РІ РЅРµРґРµР»СЋ
 
 
 select * from users_profiles up where user_id = (select id from users where name = 'zveroshmotka')
@@ -37,7 +37,7 @@ select count(*)
 from follows f1
 where f1.follows_id = (select id from users where name = 'zveroshmotka');
 
-select u.name , count(*) c  -- сообщества на которые подписаны подписчики группы
+select u.name , count(*) c  -- СЃРѕРѕР±С‰РµСЃС‚РІР° РЅР° РєРѕС‚РѕСЂС‹Рµ РїРѕРґРїРёСЃР°РЅС‹ РїРѕРґРїРёСЃС‡РёРєРё РіСЂСѓРїРїС‹
 	from follows f1
 		join follows f2 
 		    on f1.follower_id = f2.follower_id and f2.follower_id in (select f3.follower_id from follows f3 group by f3.follows_id having count(f3.follows_id)>0)
@@ -48,19 +48,21 @@ select u.name , count(*) c  -- сообщества на которые подписаны подписчики группы
 	     order by c desc
 		limit 50;
 
-CALL bp_follows_follows ('zveroshmotka'); -- сообщества на которые подписаны подписчики группы
+CALL bp_follows_follows ('zveroshmotka'); -- СЃРѕРѕР±С‰РµСЃС‚РІР° РЅР° РєРѕС‚РѕСЂС‹Рµ РїРѕРґРїРёСЃР°РЅС‹ РїРѕРґРїРёСЃС‡РёРєРё РіСЂСѓРїРїС‹
 
 
-select bc.name, up.counts_followed_by/up.counts_follows coef_pop, up.biography, u.name, up.counts_followed_by , up.counts_follows, up.counts_media 
+-- РІС‹Р±РѕСЂРєР° Р±РёР·РЅРµСЃ Р°РєРєР°СѓРЅС‚РѕРІ СЃ РјРёРЅРёРјСѓРјРѕРј РїРѕРґРїРёСЃРѕРє Рё РјР°РєСЃРёРјСѓРјРѕРј РїРѕРґРїРёСЃС‡РёРєРѕРІ
+select bc.name busness_category, up.counts_followed_by/up.counts_follows CP, round((f_engagement_rate(up.user_id)), 2) ER, u.name, up.counts_followed_by , up.counts_follows, up.counts_media 
 from users_profiles up 
 join busness_category bc 
-on up.busness_category_id = bc.id 
+	on up.busness_category_id = bc.id 
 join users u 
-on u.id = up.user_id 
-where up.busness_category_id = 1
-order by coef_pop desc;
+	on u.id = up.user_id 
+where up.busness_category_id = 1 and (f_engagement_rate(up.user_id)) > 10 and up.counts_followed_by > 1000
+order by ER desc
+limit 20;
 
--- хештеги которые встречаются с другими хт
+-- С…РµС€С‚РµРіРё РєРѕС‚РѕСЂС‹Рµ РІСЃС‚СЂРµС‡Р°СЋС‚СЃСЏ СЃ РґСЂСѓРіРёРјРё С…С‚
 select ht.name, count(*) c
 from medias_hashtags mh1
 join medias_hashtags mh2 on mh1.media_id = mh2.media_id

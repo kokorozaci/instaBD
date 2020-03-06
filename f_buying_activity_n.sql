@@ -1,5 +1,5 @@
 /*
-Покупательская активность (вопросы о цене / общее количество комментов не от автора )
+РџРѕРєСѓРїР°С‚РµР»СЊСЃРєР°СЏ Р°РєС‚РёРІРЅРѕСЃС‚СЊ (РІРѕРїСЂРѕСЃС‹ Рѕ С†РµРЅРµ / РѕР±С‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РєРѕРјРјРµРЅС‚РѕРІ РЅРµ РѕС‚ Р°РІС‚РѕСЂР° )
 */
 
 USE instabd;
@@ -18,7 +18,7 @@ RETURNS FLOAT READS SQL DATA
 		from medias md
 		join comments cmm
 			on md.id = cmm.media_id
-		where (cmm.body like '%куп%' or cmm.body like '%цен%') and md.owner_id <> cmm.owner_id and md.owner_id = check_user_id);
+		where (cmm.body like '%РєСѓРї%' or cmm.body like '%С†РµРЅ%') and md.owner_id <> cmm.owner_id and md.owner_id = check_user_id);
 
 
 	set count_comment = 
@@ -32,11 +32,11 @@ RETURNS FLOAT READS SQL DATA
   END$$ 
 DELIMITER ; 
 
--- проверка
+-- РїСЂРѕРІРµСЂРєР°
 
 select round(f_buying_activity_n(16008823), 2) as BA; 
 
--- анализ постов с известными комментариями, тут их всего 3 шт. + исключены комментарии автора поста
+-- Р°РЅР°Р»РёР· РїРѕСЃС‚РѕРІ СЃ РёР·РІРµСЃС‚РЅС‹РјРё РєРѕРјРјРµРЅС‚Р°СЂРёСЏРјРё, С‚СѓС‚ РёС… РІСЃРµРіРѕ 3 С€С‚. + РёСЃРєР»СЋС‡РµРЅС‹ РєРѕРјРјРµРЅС‚Р°СЂРёРё Р°РІС‚РѕСЂР° РїРѕСЃС‚Р°
 select count(*) 
 from medias md
 join comments cmm
@@ -44,7 +44,7 @@ join comments cmm
 where md.owner_id <> cmm.owner_id and  md.owner_id = 16008823
 group by md.id;
 
--- информация берётся из instabd.medias.count_comments  т.е. тут не исключены посты для которых не скачаны комментарии
+-- РёРЅС„РѕСЂРјР°С†РёСЏ Р±РµСЂС‘С‚СЃСЏ РёР· instabd.medias.count_comments  С‚.Рµ. С‚СѓС‚ РЅРµ РёСЃРєР»СЋС‡РµРЅС‹ РїРѕСЃС‚С‹ РґР»СЏ РєРѕС‚РѕСЂС‹С… РЅРµ СЃРєР°С‡Р°РЅС‹ РєРѕРјРјРµРЅС‚Р°СЂРёРё
 select sum(count_comments) comments 
 from medias
 where owner_id = 16008823;
