@@ -12,6 +12,10 @@
 ---
 `craete db.sql`
 
+DUMP со всемии данными из БД на яндекс диске
+---
+<https://disk.yandex.ru/client/disk/INSERT%20DATA>
+
 Процедуры
 ---
 Для вставки информации из фалов типа: `acc_info.json` :
