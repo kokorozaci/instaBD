@@ -10,15 +10,16 @@ u.name user_name,
 -- (select(round(f_engagement_rate(up.user_id), 2))) ER,
 up.counts_followed_by,
 up.counts_media,
-bc.id 'busness category'
-from medias m 
-right join users_profiles up 
-	on m.owner_id = up.user_id 
+bc.name 'busness category'
+from users_profiles up
+join medias m 
+	on m.owner_id = up.user_id and not up.busness_category_id is null
 join busness_category bc 
 	on up.busness_category_id = bc.id
 join users u 
-	on up.user_id = u.id 
-order by media_time;
+	on m.owner_id = u.id
+order by media_time
+LIMIT 20;
 
 -- ----------------------------
 

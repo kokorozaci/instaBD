@@ -11,8 +11,8 @@ up.counts_media n_media,
 up.counts_followed_by followers,
 up.counts_follows follows
 from users u 
-right join users_profiles up 
-	on up.user_id = u.id
+join users_profiles up 
+	on up.user_id = u.id and not up.busness_category_id is null
 join busness_category bc 
 	on up.busness_category_id = bc.id
 order by ER desc;

@@ -52,6 +52,11 @@ CREATE TABLE users_profiles (
     FOREIGN KEY (busness_category_id) REFERENCES busness_category(id) 
 );
 
+CREATE INDEX user_id_index ON users_profiles(user_id);
+CREATE INDEX counts_media_id_index ON users_profiles(counts_media);
+CREATE INDEX counts_followed_by_index ON users_profiles(counts_followed_by);
+CREATE INDEX counts_follows_index ON users_profiles(counts_follows);
+
 DROP TABLE IF EXISTS hashtags;
 CREATE TABLE hashtags (
 	id SERIAL PRIMARY KEY,
@@ -62,6 +67,7 @@ CREATE TABLE hashtags (
 	INDEX hashtag_name_idx(name)
 );
 
+CREATE INDEX hashtag_id_idx ON hashtags(id);
 
 DROP TABLE IF EXISTS media_types;
 CREATE TABLE media_types(
@@ -95,6 +101,9 @@ CREATE TABLE medias(
     FOREIGN KEY (owner_id) REFERENCES users(id),
     FOREIGN KEY (media_type_id) REFERENCES media_types(id)
 );
+
+CREATE INDEX medias_id_idx ON medias(id);
+CREATE INDEX created_at_idx ON medias(created_at_timestamp);
 
 DROP TABLE IF EXISTS medias_hashtags;
 CREATE TABLE medias_hashtags(
